@@ -1,0 +1,36 @@
+/**
+ * Admin-specific styles
+ */
+.basetax-settings-form .form-table {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.basetax-admin-header {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.basetax-admin-header h1 {
+    color: #247fb0; /* Base Tax blue */
+}
+
+.basetax-admin-header .basetax-logo {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.basetax-save-button {
+    background-color: #fad03b !important; /* Base Tax yellow */
+    border-color: #e9c035 !important;
+    color: #333 !important;
+    font-weight: 600;
+}
+
+.basetax-save-button:hover {
+    background-color: #e9c035 !important;
+}
