@@ -62,11 +62,14 @@ class BaseTax_Insurance_Calculator {
         // Include admin class
         require_once BASETAX_INSURANCE_CALCULATOR_PLUGIN_DIR . 'admin/class-basetax-insurance-calculator-admin.php';
         
-        // Include public class
-        require_once BASETAX_INSURANCE_CALCULATOR_PLUGIN_DIR . 'public/class-basetax-insurance-calculator-public.php';
+        // Include API class
+        require_once BASETAX_INSURANCE_CALCULATOR_PLUGIN_DIR . 'includes/class-basetax-insurance-calculator-api.php';
         
         // Include calculator class
         require_once BASETAX_INSURANCE_CALCULATOR_PLUGIN_DIR . 'includes/class-basetax-insurance-calculator-engine.php';
+        
+        // Include public class
+        require_once BASETAX_INSURANCE_CALCULATOR_PLUGIN_DIR . 'public/class-basetax-insurance-calculator-public.php';
     }
 
     /**
