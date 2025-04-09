@@ -1,14 +1,14 @@
-Base Tax 2025 License
+Base Insurance 2025 License
 
-Copyright (c) 2025 Base Tax
+Copyright (c) 2025 Base Insurance
 
 All rights reserved.
 
-This software is the property of Base Tax and is protected by copyright law. 
-This license grants use of this software exclusively to Base Tax and its authorized partners.
+This software is the property of Base Insurance and is protected by copyright law. 
+This license grants use of this software exclusively to Base Insurance and its authorized partners.
 
 Unauthorized reproduction, distribution, or modification of this software, in whole or in part,
-is strictly prohibited without prior written permission from Base Tax.
+is strictly prohibited without prior written permission from Base Insurance.
 
 THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
