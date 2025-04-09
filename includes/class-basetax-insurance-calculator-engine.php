@@ -16,11 +16,17 @@ class BaseTax_Insurance_Calculator_Engine {
     private $fpl_data;
 
     /**
+     * API client instance
+     */
+    private $api_client;
+
+    /**
      * Initialize the calculator engine
      */
     public function __construct() {
         $this->options = get_option('basetax_insurance_calculator_options');
         $this->fpl_data = $this->get_fpl_data();
+        $this->api_client = new BaseTax_Insurance_Calculator_API();
     }
 
     /**
@@ -41,6 +47,18 @@ class BaseTax_Insurance_Calculator_Engine {
         $coverage_level = $validated['coverage_level'];
         $tobacco_use = $validated['tobacco_use'];
 
+        // Try to get data from API if enabled
+        if ($this->api_client->is_api_enabled()) {
+            $api_results = $this->api_client->get_insurance_plans($validated);
+            
+            // If the API call was successful, use those results
+            if (!is_wp_error($api_results)) {
+                $api_results['disclaimer'] = $this->options['disclaimer_text'];
+                return $api_results;
+            }
+            // Otherwise, fall back to the internal calculation
+        }
+
         // Calculate base premiums for each coverage level
         $base_premiums = $this->calculate_base_premiums($zip_code, $ages, $tobacco_use);
 
@@ -54,22 +72,22 @@ class BaseTax_Insurance_Calculator_Engine {
         $results = array(
             'bronze' => array(
                 'monthly_premium' => $base_premiums['bronze'],
-                'subsidized_premium' => isset($subsidies['bronze']) ? max(0, $base_premiums['bronze'] - $subsidies['amount']) : $base_premiums['bronze'],
+                'subsidized_premium' => isset($subsidies['amount']) ? max(0, $base_premiums['bronze'] - $subsidies['amount']) : $base_premiums['bronze'],
                 'coverage_summary' => 'Bronze plans cover approximately 60% of healthcare costs on average, with lower monthly premiums but higher out-of-pocket costs.'
             ),
             'silver' => array(
                 'monthly_premium' => $base_premiums['silver'],
-                'subsidized_premium' => isset($subsidies['silver']) ? max(0, $base_premiums['silver'] - $subsidies['amount']) : $base_premiums['silver'],
+                'subsidized_premium' => isset($subsidies['amount']) ? max(0, $base_premiums['silver'] - $subsidies['amount']) : $base_premiums['silver'],
                 'coverage_summary' => 'Silver plans cover approximately 70% of healthcare costs on average, with moderate monthly premiums and out-of-pocket costs.'
             ),
             'gold' => array(
                 'monthly_premium' => $base_premiums['gold'],
-                'subsidized_premium' => isset($subsidies['gold']) ? max(0, $base_premiums['gold'] - $subsidies['amount']) : $base_premiums['gold'],
+                'subsidized_premium' => isset($subsidies['amount']) ? max(0, $base_premiums['gold'] - $subsidies['amount']) : $base_premiums['gold'],
                 'coverage_summary' => 'Gold plans cover approximately 80% of healthcare costs on average, with higher monthly premiums but lower out-of-pocket costs.'
             ),
             'platinum' => array(
                 'monthly_premium' => $base_premiums['platinum'],
-                'subsidized_premium' => isset($subsidies['platinum']) ? max(0, $base_premiums['platinum'] - $subsidies['amount']) : $base_premiums['platinum'],
+                'subsidized_premium' => isset($subsidies['amount']) ? max(0, $base_premiums['platinum'] - $subsidies['amount']) : $base_premiums['platinum'],
                 'coverage_summary' => 'Platinum plans cover approximately 90% of healthcare costs on average, with the highest monthly premiums but lowest out-of-pocket costs.'
             ),
             'subsidy_amount' => isset($subsidies['amount']) ? $subsidies['amount'] : 0,
