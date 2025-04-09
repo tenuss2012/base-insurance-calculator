@@ -102,7 +102,7 @@ class BaseTax_Insurance_Calculator_Engine {
         $validated['ages'] = $validated_ages;
         
         // Validate ZIP code
-        if (empty($params['zip_code']) || !preg_match('/^\d{5}(-\d{4})?$/', $params['zip_code'])) {
+        if (empty($params['zip_code']) || !preg_match('/^\\d{5}(-\\d{4})?$/', $params['zip_code'])) {
             return new WP_Error('invalid_zip', 'Please enter a valid 5-digit ZIP code.');
         }
         $validated['zip_code'] = substr($params['zip_code'], 0, 5); // Only keep first 5 digits
