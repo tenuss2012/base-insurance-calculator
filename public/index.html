@@ -1,21 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="BaseTax Insurance Calculator - Find affordable health insurance options"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Insurance Health Calculator</title>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <title>BaseTax Insurance Calculator</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">Base Insurance Calculator</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="calculator-wizard" id="calculatorWizard">
+                <div class="wizard-card">
+                    <div class="wizard-header" id="wizardHeader">
+                        <!-- Step indicator will be inserted here -->
+                    </div>
+                    
+                    <div class="wizard-content" id="wizardContent">
+                        <!-- Steps will be inserted here -->
+                    </div>
+                    
+                    <div class="wizard-footer" id="wizardFooter">
+                        <!-- Navigation buttons will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-page" id="resultsPage" style="display: none;">
+                <!-- Results will be inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Base Insurance. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Load scripts in the correct order -->
+    <script src="js/calculator.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
 </html> 

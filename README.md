@@ -1,108 +1,69 @@
-# BaseTax Insurance Calculator
+# Base Insurance Health Calculator
 
-A React application for calculating health insurance options, subsidy eligibility, and finding the right plan based on user needs.
+A vanilla JavaScript, HTML, and CSS implementation of an insurance needs calculator that helps users determine appropriate life insurance coverage based on their personal, financial, and family situation.
+
+## Overview
+
+The Base Insurance Health Calculator is a multi-step wizard that collects information from users and calculates a recommended insurance coverage amount. It breaks down complex insurance planning into simple steps and provides personalized recommendations.
 
 ## Features
 
-- Step-by-step wizard interface for collecting user information
-- ZIP code validation and location lookup
-- Household and family member management
-- Income and healthcare usage assessment
-- Subsidy calculation
-- Plan recommendation algorithm
-- Interactive cost comparison
-- Mobile-responsive design
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/basetax-insurance-calculator.git
-cd basetax-insurance-calculator
-```
-
-2. Install dependencies:
-```
-npm install
-```
-or if you use yarn:
-```
-yarn install
-```
-
-3. Start the development server:
-```
-npm start
-```
-or with yarn:
-```
-yarn start
-```
-
-The application will open in your default browser at http://localhost:3000.
+- Multi-step wizard interface
+- Form validation
+- Real-time calculations
+- Responsive design
+- Detailed coverage breakdown
+- No external dependencies (pure JavaScript)
 
 ## Project Structure
 
-The project follows a standard React application structure:
-
 ```
-basetax-insurance-calculator/
-├── public/                 # Static files
-├── src/                    # Source code
-│   ├── api/                # API integration
-│   ├── components/         # React components
-│   │   ├── common/         # Reusable components
-│   │   ├── layout/         # Layout components
-│   │   ├── results/        # Results page components
-│   │   └── steps/          # Wizard step components
-│   ├── context/            # React context providers
-│   ├── styles/             # Global styles and theme
-│   └── utils/              # Utility functions
-├── package.json            # Dependencies and scripts
-└── README.md               # Project documentation
+base-insurance-calculator/
+├── public/
+│   ├── index.html       # Main HTML document
+│   ├── styles.css       # CSS styles
+│   └── js/
+│       ├── calculator.js # State management and calculations
+│       ├── ui.js         # UI rendering and DOM manipulation
+│       └── app.js        # Application initialization
+└── README.md            # This file
 ```
 
-## Healthcare.gov API Integration
+## How to Run
 
-The application includes a placeholder for Healthcare.gov API integration. To implement the real API integration:
+1. Clone the repository
+2. Open the `public/index.html` file in a web browser
+3. No build process or server is required
 
-1. Obtain proper API credentials from Healthcare.gov
-2. Update the API base URL in `src/api/insuranceApi.js`
-3. Implement proper authentication and error handling
-4. Replace the mock data functions with real API calls
+## How It Works
 
-## Deployment
+1. **State Management**: The calculator uses a simple state object to track user inputs and calculation results
+2. **UI Rendering**: The UI is dynamically rendered based on the current state
+3. **Calculation Logic**: The insurance needs are calculated based on:
+   - Income replacement needs
+   - Mortgage payoff amount
+   - Debt payoff amount
+   - Education fund needs
+   - Final expenses
+   - Additional custom needs
 
-To build the application for production:
+## Calculator Steps
 
-```
-npm run build
-```
-or with yarn:
-```
-yarn build
-```
+1. **Welcome**: Introduction to the calculator
+2. **Location**: ZIP code, state, and county information
+3. **Personal**: Age, gender, tobacco use, health status
+4. **Financial**: Income, debt, mortgage, education funds
+5. **Needs**: Income replacement years, final expenses, additional needs
 
-This will create an optimized build in the `build` folder that can be deployed to any static hosting service.
+## Development
 
-## Next Steps for Implementation
+This project was converted from a React-based implementation to vanilla JavaScript to eliminate dependencies and simplify deployment. The application uses:
 
-- Complete the API integration with healthcare.gov
-- Add comprehensive testing
-- Implement analytics tracking
-- Refine the subsidy and plan recommendation algorithms
+- Plain JavaScript for state management and UI updates
+- HTML5 form elements
+- CSS for styling
+- No external libraries or frameworks
 
 ## License
 
-[Add your license information here]
-
-## Acknowledgments
-
-- [Add any acknowledgments here] 
+This project is licensed under the MIT License - see the LICENSE.txt file for details. 

@@ -1,0 +1,346 @@
+/**
+ * Base Insurance Calculator - Admin Styles
+ */
+
+/* Dashboard Widgets */
+.bic-dashboard-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.bic-dashboard-card {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin: 0 10px 20px;
+    padding: 20px;
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;
+}
+
+.bic-dashboard-card h3 {
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    margin: 0 0 15px;
+    padding: 0 0 10px;
+}
+
+.bic-dashboard-number {
+    color: #1e88e5;
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.bic-dashboard-label {
+    color: #666;
+    font-size: 13px;
+}
+
+.bic-recent-list {
+    margin: 0;
+}
+
+.bic-recent-item {
+    border-bottom: 1px solid #f5f5f5;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.bic-recent-item:last-child {
+    border-bottom: none;
+}
+
+.bic-recent-item .bic-name {
+    font-weight: 500;
+}
+
+.bic-recent-item .bic-date {
+    color: #888;
+    font-size: 12px;
+}
+
+.bic-recent-meta {
+    color: #777;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.bic-status {
+    background: #e0e0e0;
+    border-radius: 3px;
+    color: #333;
+    display: inline-block;
+    font-size: 11px;
+    margin-left: 5px;
+    padding: 1px 6px 2px;
+    text-transform: uppercase;
+}
+
+.bic-status-new {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.bic-status-contacted {
+    background: #fff8e1;
+    color: #ff8f00;
+}
+
+.bic-status-converted {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.bic-status-closed {
+    background: #fafafa;
+    color: #616161;
+}
+
+/* Submissions Table */
+.bic-submissions-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.bic-submissions-table th,
+.bic-submissions-table td {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 8px;
+    text-align: left;
+}
+
+.bic-submissions-table th {
+    background-color: #f9f9f9;
+    color: #32373c;
+    font-weight: 600;
+}
+
+.bic-submissions-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.bic-submissions-table .bic-actions {
+    white-space: nowrap;
+}
+
+.bic-submissions-table .bic-actions a {
+    margin-right: 8px;
+    text-decoration: none;
+}
+
+.bic-filters-form {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.bic-filters-form .form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.bic-filters-form .form-field {
+    margin-bottom: 0;
+}
+
+.bic-filters-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.bic-filters-form select,
+.bic-filters-form input[type="text"] {
+    width: 200px;
+}
+
+/* Advisor Edit Form */
+.bic-advisor-form {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    max-width: 800px;
+    padding: 20px;
+}
+
+.bic-advisor-form .form-row {
+    margin-bottom: 15px;
+}
+
+.bic-advisor-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.bic-advisor-form input[type="text"],
+.bic-advisor-form input[type="email"],
+.bic-advisor-form textarea {
+    width: 100%;
+}
+
+.bic-territories-section {
+    margin-top: 20px;
+}
+
+.bic-territories-list {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.bic-territory-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.bic-territory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bic-territory-zipcode-list {
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.bic-zipcode-tag {
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 12px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 2px 8px;
+}
+
+/* Detail View */
+.bic-detail-card {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.bic-detail-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.bic-detail-header h2 {
+    font-size: 1.5em;
+    margin: 0 0 10px;
+}
+
+.bic-meta-row {
+    margin-bottom: 15px;
+}
+
+.bic-meta-label {
+    color: #666;
+    font-weight: 600;
+    width: 150px;
+    display: inline-block;
+}
+
+.bic-meta-value {
+    color: #333;
+}
+
+.bic-section-title {
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    margin: 25px 0 15px;
+    padding-bottom: 8px;
+}
+
+.bic-calculations-list {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    padding: 15px;
+}
+
+.bic-calc-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.bic-calc-label {
+    color: #555;
+}
+
+.bic-calc-value {
+    font-weight: 500;
+}
+
+.bic-total-row {
+    border-top: 2px solid #ddd;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+/* Settings Page */
+.bic-settings-form {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    max-width: 800px;
+    padding: 20px;
+}
+
+.bic-settings-form h2 {
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+}
+
+.bic-settings-form .form-table th {
+    width: 200px;
+}
+
+.bic-settings-form .description {
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 782px) {
+    .bic-dashboard-card {
+        width: calc(100% - 20px);
+    }
+    
+    .bic-filters-form .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .bic-filters-form select,
+    .bic-filters-form input[type="text"] {
+        width: 100%;
+    }
+    
+    .bic-submissions-table {
+        display: block;
+        overflow-x: auto;
+    }
+} 
