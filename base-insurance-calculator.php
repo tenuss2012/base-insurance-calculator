@@ -3,7 +3,7 @@
  * Plugin Name: Base Insurance Calculator
  * Plugin URI: https://example.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
- * Version: 1.0.3
+ * Version: 1.0.5
  * Author: Your Name
  * Author URI: https://example.com
  * Text Domain: base-insurance-calculator
@@ -16,43 +16,9 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.0.3');
+define('BIC_VERSION', '1.0.4');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
-
-/**
- * Fix for CSS MIME type issue
- */
-function bic_correct_mime_type($mime_types) {
-    // Ensure CSS files use the correct MIME type
-    $mime_types['css'] = 'text/css';
-    return $mime_types;
-}
-add_filter('mime_types', 'bic_correct_mime_type');
-
-/**
- * Force correct content type for CSS files
- */
-function bic_force_css_content_type() {
-    // If this is our plugin's CSS file
-    if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/base-insurance-calculator/public/css/') !== false) {
-        if (substr($_SERVER['REQUEST_URI'], -4) === '.css') {
-            header('Content-Type: text/css');
-        }
-    }
-}
-add_action('init', 'bic_force_css_content_type', 1);
-
-/**
- * Add type="text/css" attribute to our plugin's stylesheet
- */
-function bic_fix_style_tag($tag, $handle, $src, $media) {
-    if ($handle === 'bic-calculator-style') {
-        $tag = '<link rel="stylesheet" id="' . esc_attr($handle) . '-css" href="' . esc_url($src) . '" type="text/css" media="' . esc_attr($media) . '" />';
-    }
-    return $tag;
-}
-add_filter('style_loader_tag', 'bic_fix_style_tag', 10, 4);
 
 /**
  * Create custom database tables on plugin activation
@@ -116,67 +82,154 @@ if (is_admin()) {
 }
 
 /**
- * Direct CSS file loader (for handling CSS file requests directly)
+ * Create a custom AJAX endpoint to serve CSS correctly
  */
-function bic_direct_css_loader() {
-    // Check if this is a request for our plugin's CSS
-    if (isset($_GET['bic_css']) && $_GET['bic_css'] === '1') {
-        // Verify nonce if provided
-        if (isset($_GET['nonce'])) {
-            $nonce_verified = wp_verify_nonce($_GET['nonce'], 'bic_css_nonce');
-            if (!$nonce_verified) {
-                status_header(403);
-                exit('Access denied');
-            }
-        }
+function bic_serve_css() {
+    // Set the correct MIME type header
+    header('Content-Type: text/css');
+    header('Cache-Control: max-age=86400');
+    
+    // Get the CSS file path
+    $css_file = BIC_PLUGIN_DIR . 'public/styles.css';
+    
+    // Check if file exists
+    if (file_exists($css_file)) {
+        // Add debugging comment at the top of the CSS
+        echo "/* CSS file loaded successfully from: {$css_file} */\n\n";
         
-        $css_file_path = BIC_PLUGIN_DIR . 'public/css/styles.css';
-        if (file_exists($css_file_path)) {
-            header('Content-Type: text/css');
-            header('Cache-Control: max-age=86400');
-            readfile($css_file_path);
-            exit;
-        }
+        // Output the CSS file
+        readfile($css_file);
+    } else {
+        // Output error in CSS comment format if file not found
+        echo "/* ERROR: CSS file not found at: {$css_file} */\n";
+        echo "/* Plugin directory: " . BIC_PLUGIN_DIR . " */\n";
     }
+    exit;
 }
-add_action('init', 'bic_direct_css_loader', 0);
+// Add both logged in and non-logged in user endpoints
+add_action('wp_ajax_bic_get_css', 'bic_serve_css');
+add_action('wp_ajax_nopriv_bic_get_css', 'bic_serve_css');
 
 /**
  * Register the shortcode for displaying the calculator
  */
 function bic_calculator_shortcode($atts) {
-    // Get site URL for direct CSS loading with nonce
-    $css_nonce = wp_create_nonce('bic_css_nonce');
-    $direct_css_url = add_query_arg(array('bic_css' => '1', 'nonce' => $css_nonce), site_url());
+    // Get the AJAX URL for our CSS
+    $css_url = admin_url('admin-ajax.php') . '?action=bic_get_css&ver=' . BIC_VERSION;
     
-    // Enqueue necessary scripts and styles
-    wp_enqueue_style('bic-calculator-style', BIC_PLUGIN_URL . 'public/css/styles.css', array(), BIC_VERSION);
+    // Start output buffer
+    ob_start();
     
-    // Add inline CSS fallback in case the external CSS fails to load
-    $css_file_path = BIC_PLUGIN_DIR . 'public/css/styles.css';
-    if (file_exists($css_file_path)) {
-        $inline_css = file_get_contents($css_file_path);
-        wp_add_inline_style('bic-calculator-style', $inline_css);
+    // Add CSS directly to the output rather than using wp_head
+    echo '<style type="text/css" id="bic-calculator-styles">';
+    $css_file = BIC_PLUGIN_DIR . 'public/styles.css';
+    if (file_exists($css_file)) {
+        $css_content = file_get_contents($css_file);
+        
+        // Add specificity to CSS selectors by prefixing with .bic-calculator-container
+        // Add !important to key styles
+        $css_content = str_replace(
+            array(
+                // Original selectors
+                '.calculator-wizard',
+                '.wizard-card',
+                '.wizard-header',
+                '.wizard-content',
+                '.wizard-footer',
+                '.form-group',
+                '.btn',
+                '.btn-primary',
+                'input, select, textarea',
+                // Colors
+                '--primary: #057fb0;',
+                '--white: #ffffff;',
+                '--light-gray: #f4f6f8;',
+                '--text: #333333;'
+            ),
+            array(
+                // Enhanced selectors
+                '.bic-calculator-container .calculator-wizard',
+                '.bic-calculator-container .wizard-card',
+                '.bic-calculator-container .wizard-header',
+                '.bic-calculator-container .wizard-content',
+                '.bic-calculator-container .wizard-footer',
+                '.bic-calculator-container .form-group',
+                '.bic-calculator-container .btn',
+                '.bic-calculator-container .btn-primary',
+                '.bic-calculator-container input, .bic-calculator-container select, .bic-calculator-container textarea',
+                // Enhanced colors with !important
+                '--primary: #057fb0 !important;',
+                '--white: #ffffff !important;',
+                '--light-gray: #f4f6f8 !important;',
+                '--text: #333333 !important;'
+            ),
+            $css_content
+        );
+        
+        echo $css_content;
     }
+    echo '</style>';
     
-    // Add a CSS fallback script in case the main CSS fails to load
-    wp_add_inline_script('jquery', '
-        jQuery(document).ready(function($) {
-            // Check if main CSS is loaded
-            var styleLoaded = false;
-            $("link").each(function() {
-                if ($(this).attr("href") && $(this).attr("href").indexOf("styles.css") > -1) {
-                    styleLoaded = true;
-                }
-            });
-            
-            // If not loaded, add direct CSS link
-            if (!styleLoaded) {
-                $("head").append("<link rel=\'stylesheet\' type=\'text/css\' href=\'' . esc_url($direct_css_url) . '\' />");
-            }
-        });
-    ');
+    // Add critical inline styles as a fallback
+    echo '<style type="text/css">
+    .bic-calculator-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        font-family: "Poppins", sans-serif !important;
+    }
+    .bic-calculator-container .wizard-card {
+        background-color: #ffffff !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        overflow: hidden !important;
+    }
+    .bic-calculator-container .wizard-header,
+    .bic-calculator-container .wizard-content {
+        padding: 1.5rem !important;
+    }
+    .bic-calculator-container .wizard-footer {
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 1.5rem !important;
+        border-top: 1px solid #f4f6f8 !important;
+    }
+    .bic-calculator-container .form-group {
+        margin-bottom: 1rem !important;
+    }
+    .bic-calculator-container label {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        font-weight: 500 !important;
+    }
+    .bic-calculator-container input,
+    .bic-calculator-container select,
+    .bic-calculator-container textarea {
+        width: 100% !important;
+        padding: 0.75rem !important;
+        font-family: "Poppins", sans-serif !important;
+        font-size: 1rem !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 4px !important;
+    }
+    .bic-calculator-container .btn {
+        display: inline-block !important;
+        padding: 0.75rem 1.5rem !important;
+        font-family: "Poppins", sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        text-align: center !important;
+        border: none !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+    }
+    .bic-calculator-container .btn-primary {
+        background-color: #057fb0 !important;
+        color: #ffffff !important;
+    }
+    </style>';
     
+    // Enqueue scripts
     wp_enqueue_script('bic-calculator-js', BIC_PLUGIN_URL . 'public/js/calculator.js', array('jquery'), BIC_VERSION, true);
     wp_enqueue_script('bic-ui-js', BIC_PLUGIN_URL . 'public/js/ui.js', array('jquery', 'bic-calculator-js'), BIC_VERSION, true);
     wp_enqueue_script('bic-app-js', BIC_PLUGIN_URL . 'public/js/app.js', array('jquery', 'bic-ui-js'), BIC_VERSION, true);
@@ -187,9 +240,10 @@ function bic_calculator_shortcode($atts) {
         'nonce' => wp_create_nonce('bic_submission_nonce')
     ));
     
-    // Return calculator HTML
-    ob_start();
+    // Include the calculator display
     include BIC_PLUGIN_DIR . 'public/partials/calculator-display.php';
+    
+    // Return the buffer contents
     return ob_get_clean();
 }
 add_shortcode('insurance_calculator', 'bic_calculator_shortcode');
