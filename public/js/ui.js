@@ -346,7 +346,7 @@ function renderPersonalStep() {
                         name="smoker"
                         ${calculatorState.personal.smoker ? 'checked' : ''}
                     > 
-                    I use tobacco products
+                    <span style="display: inline-block; vertical-align: middle;">I use tobacco products</span>
                 </label>
             </div>
             
@@ -437,7 +437,7 @@ function renderCurrentPolicyStep() {
                         name="hasPolicy"
                         ${calculatorState.currentPolicy.hasPolicy ? 'checked' : ''}
                     > 
-                    I already have a life insurance policy
+                    <span style="display: inline-block; vertical-align: middle;">I already have a life insurance policy</span>
                 </label>
             </div>
             

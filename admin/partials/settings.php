@@ -76,7 +76,7 @@
                 </th>
                 <td>
                     <input type="text" id="bic-calculator-title" name="calculator_title" class="regular-text" 
-                           value="<?php echo esc_attr(get_option('bic_calculator_title', 'Insurance Needs Calculator')); ?>">
+                           value="<?php echo esc_attr(get_option('bic_calculator_title', '')); ?>">
                 </td>
             </tr>
             
@@ -114,6 +114,49 @@
             </tr>
         </table>
         
+        <h2>Advisor Assignment Settings</h2>
+        
+        <table class="form-table">
+            <tr>
+                <th scope="row">
+                    <label for="bic-default-advisor">Default Advisor</label>
+                </th>
+                <td>
+                    <select id="bic-default-advisor" name="default_advisor" class="regular-text">
+                        <option value="0">-- Select Default Advisor --</option>
+                        <?php
+                        global $wpdb;
+                        $advisors = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}bic_advisors ORDER BY name ASC");
+                        foreach ($advisors as $advisor) {
+                            $selected = (get_option('bic_default_advisor', 0) == $advisor->id) ? 'selected' : '';
+                            echo '<option value="' . esc_attr($advisor->id) . '" ' . $selected . '>' . esc_html($advisor->name) . '</option>';
+                        }
+                        ?>
+                    </select>
+                    <p class="description">
+                        This advisor will be assigned to submissions when no territorial match is found.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label for="bic-assignment-method">Assignment Method</label>
+                </th>
+                <td>
+                    <?php $current_method = get_option('bic_assignment_method', 'round-robin'); ?>
+                    <select id="bic-assignment-method" name="assignment_method" class="regular-text">
+                        <option value="round-robin" <?php selected('round-robin', $current_method); ?>>Round-Robin (balanced)</option>
+                        <option value="first-match" <?php selected('first-match', $current_method); ?>>First Match (by ID)</option>
+                    </select>
+                    <p class="description">
+                        Method used when multiple advisors match a territory. Round-robin balances leads across advisors.
+                    </p>
+                    <button type="button" id="reset-assignment-index" class="button">Reset Round-Robin Counter</button>
+                    <span id="reset-message" style="display: none; margin-left: 10px; color: green;"></span>
+                </td>
+            </tr>
+        </table>
+        
         <p class="submit">
             <button type="submit" class="button button-primary">Save Settings</button>
         </p>
@@ -140,7 +183,9 @@
                     calculator_title: $('#bic-calculator-title').val(),
                     primary_color: $('#bic-primary-color').val(),
                     button_text: $('input[name="button_text"]').val(),
-                    show_logo: $('input[name="show_logo"]').is(':checked') ? '1' : '0'
+                    show_logo: $('input[name="show_logo"]').is(':checked') ? '1' : '0',
+                    default_advisor: $('#bic-default-advisor').val(),
+                    assignment_method: $('#bic-assignment-method').val()
                 },
                 success: function(response) {
                     if (response.success) {
@@ -172,6 +217,32 @@
                 },
                 error: function() {
                     alert('An error occurred while saving the settings');
+                }
+            });
+        });
+        
+        // Handle reset assignment index button
+        $('#reset-assignment-index').on('click', function() {
+            $.ajax({
+                url: bicAdmin.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'bic_reset_assignment_index',
+                    nonce: bicAdmin.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        const $message = $('#reset-message');
+                        $message.text('Counter reset successfully!').show();
+                        setTimeout(function() {
+                            $message.fadeOut();
+                        }, 3000);
+                    } else {
+                        alert('Failed to reset counter: ' + response.data);
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while resetting the counter');
                 }
             });
         });

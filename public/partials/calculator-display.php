@@ -1,16 +1,5 @@
 <div class="bic-calculator-container">
-    <?php if (get_option('bic_show_logo', '1') === '1') : ?>
-        <div class="bic-logo">
-            <?php
-            $logo_url = get_option('bic_logo_url', '');
-            if (!empty($logo_url)) {
-                echo '<img src="' . esc_url($logo_url) . '" alt="Company Logo">';
-            } else {
-                echo '<div class="bic-logo-text">' . esc_html(get_option('bic_calculator_title', 'Insurance Needs Calculator')) . '</div>';
-            }
-            ?>
-        </div>
-    <?php endif; ?>
+    <?php /* Title/logo hidden as requested */ ?>
     
     <div class="calculator-wizard" id="calculatorWizard">
         <div class="wizard-card">

@@ -173,8 +173,9 @@ function bic_calculator_shortcode($atts) {
     // Add critical inline styles as a fallback
     echo '<style type="text/css">
     .bic-calculator-container {
-        max-width: 800px;
-        margin: 2rem auto;
+        max-width: 1000px;
+        width: 100%;
+        margin: 1rem auto;
         font-family: "Poppins", sans-serif !important;
     }
     .bic-calculator-container .wizard-card,
@@ -183,31 +184,46 @@ function bic_calculator_shortcode($atts) {
         border-radius: 8px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
         overflow: hidden !important;
-        padding: 1.5rem !important;
+        padding: 1rem !important;
     }
     .bic-calculator-container .wizard-header,
     .bic-calculator-container .wizard-content {
-        padding: 1.5rem !important;
+        padding: 1rem !important;
     }
     .bic-calculator-container .wizard-footer {
         display: flex !important;
         justify-content: space-between !important;
-        padding: 1.5rem !important;
+        padding: 1rem !important;
         border-top: 1px solid #f4f6f8 !important;
     }
     .bic-calculator-container .form-group {
-        margin-bottom: 1rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .bic-calculator-container .contact-step .form-group {
+        width: 48% !important;
+        display: inline-block !important;
+        vertical-align: top !important;
+        margin-right: 1.5% !important;
     }
     .bic-calculator-container label {
         display: block !important;
-        margin-bottom: 0.5rem !important;
+        margin-bottom: 0.25rem !important;
         font-weight: 500 !important;
+    }
+    /* Checkbox label alignment fixes */
+    .bic-calculator-container .checkbox-label {
+        display: flex !important;
+        align-items: center !important;
+    }
+    .bic-calculator-container .checkbox-label input[type="checkbox"] {
+        width: auto !important;
+        margin-right: 8px !important;
     }
     .bic-calculator-container input,
     .bic-calculator-container select,
     .bic-calculator-container textarea {
         width: 100% !important;
-        padding: 0.75rem !important;
+        padding: 0.5rem 0.75rem !important;
         font-family: "Poppins", sans-serif !important;
         font-size: 1rem !important;
         border: 1px solid #e0e0e0 !important;
@@ -215,7 +231,7 @@ function bic_calculator_shortcode($atts) {
     }
     .bic-calculator-container .btn {
         display: inline-block !important;
-        padding: 0.75rem 1.5rem !important;
+        padding: 0.5rem 1.25rem !important;
         font-family: "Poppins", sans-serif !important;
         font-size: 1rem !important;
         font-weight: 500 !important;
@@ -236,35 +252,61 @@ function bic_calculator_shortcode($atts) {
     }
     .bic-calculator-container .results-header {
         text-align: center !important;
-        margin-bottom: 2rem !important;
+        margin-bottom: 1.5rem !important;
     }
     .bic-calculator-container .results-title {
-        font-size: 1.75rem !important;
+        font-size: 1.5rem !important;
         color: #057fb0 !important;
         margin-bottom: 0.5rem !important;
     }
     .bic-calculator-container .coverage-amount {
-        font-size: 2.5rem !important;
+        font-size: 2.25rem !important;
         font-weight: 700 !important;
         color: #057fb0 !important;
-        margin: 1.5rem 0 !important;
+        margin: 1rem 0 !important;
     }
     .bic-calculator-container .breakdown-title {
         font-size: 1.25rem !important;
-        margin-bottom: 1rem !important;
+        margin-bottom: 0.75rem !important;
         border-bottom: 1px solid #f4f6f8 !important;
         padding-bottom: 0.5rem !important;
     }
     .bic-calculator-container .breakdown-item {
         display: flex !important;
         justify-content: space-between !important;
-        margin-bottom: 0.75rem !important;
-        padding-bottom: 0.75rem !important;
+        margin-bottom: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
         border-bottom: 1px dashed #f4f6f8 !important;
     }
     .bic-calculator-container .action-buttons {
-        margin-top: 2rem !important;
+        margin-top: 1.5rem !important;
         text-align: center !important;
+    }
+    /* Two-column layout for wider fields */
+    .bic-calculator-container .financial-step .form-group,
+    .bic-calculator-container .needs-step .form-group,
+    .bic-calculator-container .personal-step .form-group,
+    .bic-calculator-container .location-step .form-group {
+        width: 48% !important;
+        display: inline-block !important;
+        vertical-align: top !important;
+        margin-right: 1.5% !important;
+    }
+    /* Step indicator styles */
+    .bic-calculator-container .step-indicator {
+        margin-bottom: 1rem !important;
+    }
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .bic-calculator-container .contact-step .form-group,
+        .bic-calculator-container .financial-step .form-group,
+        .bic-calculator-container .needs-step .form-group,
+        .bic-calculator-container .personal-step .form-group,
+        .bic-calculator-container .location-step .form-group {
+            width: 100% !important;
+            display: block !important;
+            margin-right: 0 !important;
+        }
     }
     </style>';
     
@@ -331,28 +373,28 @@ function bic_handle_submission() {
         $submission_id = $wpdb->insert_id;
         
         // Find nearest advisor
-        $advisor_id = bic_find_nearest_advisor($data['location']['state'], $data['location']['zipCode']);
+        $advisor = bic_find_nearest_advisor($data['location']['state'], $data['location']['zipCode']);
         
-        if ($advisor_id) {
+        if ($advisor) {
             // Update submission with advisor id
             $wpdb->update(
                 $wpdb->prefix . 'bic_submissions',
-                array('advisor_id' => $advisor_id),
+                array('advisor_id' => $advisor->id),
                 array('id' => $submission_id)
             );
             
             // Get advisor info
-            $advisor = $wpdb->get_row($wpdb->prepare(
+            $advisor_info = $wpdb->get_row($wpdb->prepare(
                 "SELECT name, email FROM {$wpdb->prefix}bic_advisors WHERE id = %d",
-                $advisor_id
+                $advisor->id
             ));
             
-            if ($advisor) {
+            if ($advisor_info) {
                 // Send email notification to advisor
-                bic_notify_advisor($advisor_id, $submission_id, $data);
+                bic_notify_advisor($advisor->id, $submission_id, $data);
                 
                 // Send email notification to submitter
-                bic_notify_submitter($data, $advisor, $submission_id);
+                bic_notify_submitter($data, $advisor_info, $submission_id);
             }
         }
         
@@ -369,35 +411,90 @@ add_action('wp_ajax_bic_submission', 'bic_handle_submission');
 add_action('wp_ajax_nopriv_bic_submission', 'bic_handle_submission');
 
 /**
- * Find the nearest advisor based on state/zip
+ * Find nearest advisor based on state and zip code
+ * Now supports round-robin assignment
  */
-function bic_find_nearest_advisor($state, $zip) {
+function bic_find_nearest_advisor($state, $zip_code) {
     global $wpdb;
     
-    // Simple implementation - find advisors who have this state in their territories
+    $advisors_table = $wpdb->prefix . 'bic_advisors';
+    
+    // Get all advisors with their territories
     $advisors = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT id, territories FROM {$wpdb->prefix}bic_advisors WHERE territories LIKE %s ORDER BY id ASC",
-            '%' . $state . '%'
-        )
+        "SELECT * FROM $advisors_table ORDER BY id ASC"
     );
     
+    $matching_advisors = array();
+    
+    // Find advisors that cover this state and zip code
     foreach ($advisors as $advisor) {
+        // Decode the territories JSON
         $territories = json_decode($advisor->territories, true);
         
-        // If this advisor covers the state
+        // If territories is not valid JSON or empty, skip
+        if (!is_array($territories) || empty($territories)) {
+            continue;
+        }
+        
+        // Check if advisor has this state in their territories
         if (isset($territories[$state])) {
-            // Check if they cover all zips or this specific zip
-            if ($territories[$state] === '*' || 
-                (is_array($territories[$state]) && in_array($zip, $territories[$state]))) {
-                return $advisor->id;
+            $territory = $territories[$state];
+            
+            // If territory is set to all zip codes (*) or contains this zip code
+            if ($territory === '*' || (is_array($territory) && in_array($zip_code, $territory))) {
+                $matching_advisors[] = $advisor;
             }
         }
     }
     
-    // Return first advisor as fallback or null if none found
-    $first_advisor = $wpdb->get_var("SELECT id FROM {$wpdb->prefix}bic_advisors ORDER BY id ASC LIMIT 1");
-    return $first_advisor;
+    // If we found matching advisors
+    if (!empty($matching_advisors)) {
+        // Get the assignment method from settings (default to round-robin)
+        $assignment_method = get_option('bic_assignment_method', 'round-robin');
+        
+        if ($assignment_method === 'first-match') {
+            // Return the first matching advisor (original behavior)
+            return $matching_advisors[0];
+        } else {
+            // Round-robin assignment
+            $assignment_index = get_option('bic_last_assigned_index', 0);
+            
+            $advisor_count = count($matching_advisors);
+            // Calculate next index
+            $next_index = ($assignment_index + 1) % $advisor_count;
+            
+            // Save the updated index for future assignments
+            update_option('bic_last_assigned_index', $next_index);
+            
+            // For debugging
+            error_log("Round-robin assignment: Using advisor at index $next_index of $advisor_count matching advisors. Assignment index was $assignment_index");
+            
+            return $matching_advisors[$next_index];
+        }
+    }
+    
+    // No matching advisors found, check for default advisor
+    $default_advisor_id = get_option('bic_default_advisor', 0);
+    
+    if ($default_advisor_id > 0) {
+        $default_advisor = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM $advisors_table WHERE id = %d",
+                $default_advisor_id
+            )
+        );
+        
+        if ($default_advisor) {
+            return $default_advisor;
+        }
+    }
+    
+    // If no matching advisors and no default, fall back to first advisor
+    if (!empty($advisors)) {
+        return $advisors[0];
+    }
+    
+    return null;
 }
 
 /**
@@ -554,6 +651,32 @@ function bic_save_settings() {
         update_option('bic_show_logo', sanitize_text_field($_POST['show_logo']));
     }
     
+    // Save advisor assignment settings
+    if (isset($_POST['default_advisor'])) {
+        update_option('bic_default_advisor', intval($_POST['default_advisor']));
+    }
+    
+    if (isset($_POST['assignment_method'])) {
+        update_option('bic_assignment_method', sanitize_text_field($_POST['assignment_method']));
+    }
+    
     wp_send_json_success();
 }
-add_action('wp_ajax_bic_save_settings', 'bic_save_settings'); 
+add_action('wp_ajax_bic_save_settings', 'bic_save_settings');
+
+/**
+ * Reset the assignment index counter for round-robin
+ */
+function bic_reset_assignment_index() {
+    check_ajax_referer('bic_admin_nonce', 'nonce');
+    
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('You do not have permission to do this');
+    }
+    
+    // Reset the counter to 0
+    update_option('bic_last_assigned_index', 0);
+    
+    wp_send_json_success();
+}
+add_action('wp_ajax_bic_reset_assignment_index', 'bic_reset_assignment_index'); 
