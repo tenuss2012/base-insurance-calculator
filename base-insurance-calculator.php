@@ -3,7 +3,7 @@
  * Plugin Name: Base Insurance Calculator
  * Plugin URI: https://baseinsurance.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
- * Version: 1.0.8
+ * Version: 1.1.0
  * Author: Terrence Nuss
  * Author URI: https://baseinsurance.com
  * Text Domain: base-insurance-calculator
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.0.8');
+define('BIC_VERSION', '1.1.0');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -117,6 +117,10 @@ function bic_calculator_shortcode($atts) {
     // Get the AJAX URL for our CSS
     $css_url = admin_url('admin-ajax.php') . '?action=bic_get_css&ver=' . BIC_VERSION;
     
+    // Get custom colors with fallbacks
+    $primary_color = get_option('bic_primary_color', '#ec7d39');
+    $secondary_color = get_option('bic_secondary_color', '#000000');
+    
     // Start output buffer
     ob_start();
     
@@ -142,6 +146,7 @@ function bic_calculator_shortcode($atts) {
                 'input, select, textarea',
                 // Colors
                 '--primary: #057fb0;',
+                '--secondary: #247fb0;',
                 '--white: #ffffff;',
                 '--light-gray: #f4f6f8;',
                 '--text: #333333;'
@@ -157,8 +162,9 @@ function bic_calculator_shortcode($atts) {
                 '.bic-calculator-container .btn',
                 '.bic-calculator-container .btn-primary',
                 '.bic-calculator-container input, .bic-calculator-container select, .bic-calculator-container textarea',
-                // Enhanced colors with !important
-                '--primary: #057fb0 !important;',
+                // Enhanced colors with !important and custom values
+                '--primary: ' . $primary_color . ' !important;',
+                '--secondary: ' . $secondary_color . ' !important;',
                 '--white: #ffffff !important;',
                 '--light-gray: #f4f6f8 !important;',
                 '--text: #333333 !important;'
@@ -177,6 +183,16 @@ function bic_calculator_shortcode($atts) {
         width: 100%;
         margin: 1rem auto;
         font-family: "Poppins", sans-serif !important;
+    }
+    .bic-calculator-container .calculator-logo {
+        text-align: center !important;
+        margin-bottom: 1.5rem !important;
+        max-width: 100% !important;
+    }
+    .bic-calculator-container .calculator-logo img {
+        max-width: 100% !important;
+        max-height: 120px !important;
+        height: auto !important;
     }
     .bic-calculator-container .wizard-card,
     .bic-calculator-container .results-card {
@@ -242,13 +258,13 @@ function bic_calculator_shortcode($atts) {
         transition: all 0.3s ease !important;
     }
     .bic-calculator-container .btn-primary {
-        background-color: #057fb0 !important;
+        background-color: ' . $primary_color . ' !important;
         color: #ffffff !important;
     }
     .bic-calculator-container .btn-secondary {
         background-color: #ffffff !important;
-        color: #057fb0 !important;
-        border: 1px solid #057fb0 !important;
+        color: ' . $primary_color . ' !important;
+        border: 1px solid ' . $primary_color . ' !important;
     }
     .bic-calculator-container .results-header {
         text-align: center !important;
@@ -256,13 +272,13 @@ function bic_calculator_shortcode($atts) {
     }
     .bic-calculator-container .results-title {
         font-size: 1.5rem !important;
-        color: #057fb0 !important;
+        color: ' . $primary_color . ' !important;
         margin-bottom: 0.5rem !important;
     }
     .bic-calculator-container .coverage-amount {
         font-size: 2.25rem !important;
         font-weight: 700 !important;
-        color: #057fb0 !important;
+        color: ' . $primary_color . ' !important;
         margin: 1rem 0 !important;
     }
     .bic-calculator-container .breakdown-title {
@@ -295,6 +311,22 @@ function bic_calculator_shortcode($atts) {
     /* Step indicator styles */
     .bic-calculator-container .step-indicator {
         margin-bottom: 1rem !important;
+    }
+    .bic-calculator-container .step-item:not(:last-child)::after {
+        background-color: ' . $secondary_color . ' !important;
+    }
+    .bic-calculator-container .step-number {
+        background-color: ' . $secondary_color . ' !important;
+        color: #ffffff !important;
+    }
+    .bic-calculator-container .step-item.active .step-number {
+        background-color: ' . $primary_color . ' !important;
+    }
+    .bic-calculator-container .step-item.active .step-title {
+        color: ' . $primary_color . ' !important;
+    }
+    .bic-calculator-container .step-item.completed .step-number {
+        background-color: ' . $primary_color . ' !important;
     }
     /* Responsive styles */
     @media (max-width: 768px) {
@@ -642,12 +674,20 @@ function bic_save_settings() {
         update_option('bic_primary_color', sanitize_hex_color($_POST['primary_color']));
     }
     
+    if (isset($_POST['secondary_color'])) {
+        update_option('bic_secondary_color', sanitize_hex_color($_POST['secondary_color']));
+    }
+    
     if (isset($_POST['button_text'])) {
         update_option('bic_button_text', sanitize_text_field($_POST['button_text']));
     }
     
     if (isset($_POST['show_logo'])) {
         update_option('bic_show_logo', sanitize_text_field($_POST['show_logo']));
+    }
+    
+    if (isset($_POST['logo_url'])) {
+        update_option('bic_logo_url', esc_url_raw($_POST['logo_url']));
     }
     
     // Save advisor assignment settings

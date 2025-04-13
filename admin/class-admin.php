@@ -87,6 +87,11 @@ class BIC_Admin {
         wp_enqueue_style('bic-admin-styles', BIC_PLUGIN_URL . 'admin/css/admin.css', array(), BIC_VERSION);
         wp_enqueue_script('bic-admin-script', BIC_PLUGIN_URL . 'admin/js/admin.js', array('jquery'), BIC_VERSION, true);
         
+        // Add media uploader for logo upload on settings page
+        if ($hook === 'insurance-calc_page_bic-settings') {
+            wp_enqueue_media();
+        }
+        
         // Add data for the JavaScript
         wp_localize_script('bic-admin-script', 'bicAdmin', array(
             'ajaxurl' => admin_url('admin-ajax.php'),

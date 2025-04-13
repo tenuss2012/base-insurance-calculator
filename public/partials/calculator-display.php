@@ -1,5 +1,7 @@
 <div class="bic-calculator-container">
-    <?php /* Title/logo hidden as requested */ ?>
+    <div class="calculator-logo" id="calculatorLogo" style="<?php echo (get_option('bic_show_logo', 'no') === 'yes' && get_option('bic_logo_url')) ? '' : 'display: none;'; ?>">
+        <img src="<?php echo esc_url(get_option('bic_logo_url', '')); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?> Logo">
+    </div>
     
     <div class="calculator-wizard" id="calculatorWizard">
         <div class="wizard-card">

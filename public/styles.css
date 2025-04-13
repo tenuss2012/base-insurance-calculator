@@ -226,7 +226,7 @@ input.has-error, select.has-error {
     left: 50%;
     width: 100%;
     height: 2px;
-    background-color: var(--gray);
+    background-color: var(--secondary);
     z-index: 1;
 }
 
@@ -236,7 +236,7 @@ input.has-error, select.has-error {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--gray);
+    background-color: var(--secondary);
     color: var(--white);
     border-radius: 50%;
     margin: 0 auto 0.5rem;
@@ -259,7 +259,7 @@ input.has-error, select.has-error {
 }
 
 .step-item.completed .step-number {
-    background-color: var(--accent);
+    background-color: var(--primary);
 }
 
 /* Results Page Styles */
@@ -423,4 +423,17 @@ input.has-error, select.has-error {
     h2 {
         font-size: 1.3rem;
     }
+}
+
+/* Logo Container Styles */
+.calculator-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+}
+
+.calculator-logo img {
+    max-width: 100%;
+    max-height: 120px;
+    height: auto;
 } 

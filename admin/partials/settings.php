@@ -86,7 +86,27 @@
                 </th>
                 <td>
                     <input type="color" id="bic-primary-color" name="primary_color" 
-                           value="<?php echo esc_attr(get_option('bic_primary_color', '#1e88e5')); ?>">
+                           value="<?php echo esc_attr(get_option('bic_primary_color', '#ec7d39')); ?>">
+                    <input type="text" id="bic-primary-color-hex" class="color-hex" 
+                           value="<?php echo esc_attr(get_option('bic_primary_color', '#ec7d39')); ?>">
+                    <p class="description">
+                        Primary color for buttons, headers, and highlights. Default: #ec7d39
+                    </p>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">
+                    <label for="bic-secondary-color">Secondary Color</label>
+                </th>
+                <td>
+                    <input type="color" id="bic-secondary-color" name="secondary_color" 
+                           value="<?php echo esc_attr(get_option('bic_secondary_color', '#000000')); ?>">
+                    <input type="text" id="bic-secondary-color-hex" class="color-hex" 
+                           value="<?php echo esc_attr(get_option('bic_secondary_color', '#000000')); ?>">
+                    <p class="description">
+                        Secondary color for accents and supporting elements. Default: #000000
+                    </p>
                 </td>
             </tr>
             
@@ -102,12 +122,30 @@
             </tr>
             
             <tr>
-                <th scope="row">Show Company Logo</th>
+                <th scope="row">Calculator Logo</th>
+                <td>
+                    <div class="logo-preview-container">
+                        <?php $logo_url = get_option('bic_logo_url', ''); ?>
+                        <div id="logo-preview" class="logo-preview" style="<?php echo !empty($logo_url) ? '' : 'display:none;'; ?>">
+                            <img src="<?php echo esc_url($logo_url); ?>" alt="Logo Preview">
+                        </div>
+                    </div>
+                    <input type="hidden" name="logo_url" id="bic-logo-url" value="<?php echo esc_attr($logo_url); ?>">
+                    <button type="button" class="button" id="upload-logo-button">Upload Logo</button>
+                    <button type="button" class="button" id="remove-logo-button" style="<?php echo !empty($logo_url) ? '' : 'display:none;'; ?>">Remove Logo</button>
+                    <p class="description">
+                        Upload a logo to display at the top of the calculator. Recommended size: 300px × 100px.
+                    </p>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">Show Logo</th>
                 <td>
                     <fieldset>
                         <label>
-                            <input type="checkbox" name="show_logo" value="1" <?php checked('1', get_option('bic_show_logo', '1')); ?>>
-                            Display company logo in calculator header
+                            <input type="checkbox" name="show_logo" value="yes" <?php checked('yes', get_option('bic_show_logo', 'no')); ?>>
+                            Display logo at the top of the calculator
                         </label>
                     </fieldset>
                 </td>
@@ -165,6 +203,56 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {
+        // Add some basic styles for the color picker UI
+        $('<style>.color-hex { width: 80px; margin-left: 10px; } .logo-preview { max-width: 300px; margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; background: #f9f9f9; } .logo-preview img { max-width: 100%; max-height: 100px; }</style>').appendTo('head');
+        
+        // Sync color inputs with hex text fields
+        function syncColorField(colorInput, hexInput) {
+            $(colorInput).on('input', function() {
+                $(hexInput).val($(this).val());
+            });
+            
+            $(hexInput).on('input', function() {
+                const val = $(this).val();
+                if (/^#[0-9A-F]{6}$/i.test(val)) {
+                    $(colorInput).val(val);
+                }
+            });
+        }
+        
+        syncColorField('#bic-primary-color', '#bic-primary-color-hex');
+        syncColorField('#bic-secondary-color', '#bic-secondary-color-hex');
+        
+        // Logo upload functionality
+        $('#upload-logo-button').on('click', function(e) {
+            e.preventDefault();
+            
+            const mediaUploader = wp.media({
+                title: 'Select Logo',
+                button: {
+                    text: 'Use this logo'
+                },
+                multiple: false
+            });
+            
+            mediaUploader.on('select', function() {
+                const attachment = mediaUploader.state().get('selection').first().toJSON();
+                $('#bic-logo-url').val(attachment.url);
+                $('#logo-preview').show().find('img').attr('src', attachment.url);
+                $('#remove-logo-button').show();
+            });
+            
+            mediaUploader.open();
+        });
+        
+        // Remove logo functionality
+        $('#remove-logo-button').on('click', function(e) {
+            e.preventDefault();
+            $('#bic-logo-url').val('');
+            $('#logo-preview').hide();
+            $(this).hide();
+        });
+        
         $('#bic-settings-form').on('submit', function(e) {
             e.preventDefault();
             
@@ -182,8 +270,10 @@
                     submitter_email_template: $('#bic-submitter-email-template').val(),
                     calculator_title: $('#bic-calculator-title').val(),
                     primary_color: $('#bic-primary-color').val(),
+                    secondary_color: $('#bic-secondary-color').val(),
                     button_text: $('input[name="button_text"]').val(),
-                    show_logo: $('input[name="show_logo"]').is(':checked') ? '1' : '0',
+                    show_logo: $('input[name="show_logo"]').is(':checked') ? 'yes' : 'no',
+                    logo_url: $('#bic-logo-url').val(),
                     default_advisor: $('#bic-default-advisor').val(),
                     assignment_method: $('#bic-assignment-method').val()
                 },
