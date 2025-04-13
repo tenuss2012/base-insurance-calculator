@@ -1,10 +1,10 @@
-/* Base Insurance Health Calculator Styles */
+/* Insurance Needs Calculator Styles */
 
 :root {
     /* Colors */
     --primary: #057fb0;
     --secondary: #247fb0;
-    --accent: #4054b2;
+    --accent: #fad03b;
     --highlight: #fad03b;
     --white: #ffffff;
     --light-gray: #f4f6f8;

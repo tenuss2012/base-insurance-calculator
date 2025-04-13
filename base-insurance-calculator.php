@@ -3,7 +3,7 @@
  * Plugin Name: Base Insurance Calculator
  * Plugin URI: https://baseinsurance.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
- * Version: 1.0.7
+ * Version: 1.0.8
  * Author: Terrence Nuss
  * Author URI: https://baseinsurance.com
  * Text Domain: base-insurance-calculator
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.0.7');
+define('BIC_VERSION', '1.0.8');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
