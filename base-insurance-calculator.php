@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Base Insurance Calculator
- * Plugin URI: https://example.com/base-insurance-calculator
+ * Plugin URI: https://basewinsurance.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
  * Version: 1.0.5
  * Author: Your Name
- * Author URI: https://example.com
+ * Author URI: https://baseinsurance.com
  * Text Domain: base-insurance-calculator
  * Domain Path: /languages
  */
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.0.4');
+define('BIC_VERSION', '1.0.5');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -177,11 +177,13 @@ function bic_calculator_shortcode($atts) {
         margin: 2rem auto;
         font-family: "Poppins", sans-serif !important;
     }
-    .bic-calculator-container .wizard-card {
+    .bic-calculator-container .wizard-card,
+    .bic-calculator-container .results-card {
         background-color: #ffffff !important;
         border-radius: 8px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
         overflow: hidden !important;
+        padding: 1.5rem !important;
     }
     .bic-calculator-container .wizard-header,
     .bic-calculator-container .wizard-content {
@@ -226,6 +228,43 @@ function bic_calculator_shortcode($atts) {
     .bic-calculator-container .btn-primary {
         background-color: #057fb0 !important;
         color: #ffffff !important;
+    }
+    .bic-calculator-container .btn-secondary {
+        background-color: #ffffff !important;
+        color: #057fb0 !important;
+        border: 1px solid #057fb0 !important;
+    }
+    .bic-calculator-container .results-header {
+        text-align: center !important;
+        margin-bottom: 2rem !important;
+    }
+    .bic-calculator-container .results-title {
+        font-size: 1.75rem !important;
+        color: #057fb0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .bic-calculator-container .coverage-amount {
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        color: #057fb0 !important;
+        margin: 1.5rem 0 !important;
+    }
+    .bic-calculator-container .breakdown-title {
+        font-size: 1.25rem !important;
+        margin-bottom: 1rem !important;
+        border-bottom: 1px solid #f4f6f8 !important;
+        padding-bottom: 0.5rem !important;
+    }
+    .bic-calculator-container .breakdown-item {
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-bottom: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+        border-bottom: 1px dashed #f4f6f8 !important;
+    }
+    .bic-calculator-container .action-buttons {
+        margin-top: 2rem !important;
+        text-align: center !important;
     }
     </style>';
     

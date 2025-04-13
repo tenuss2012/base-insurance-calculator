@@ -515,7 +515,8 @@ function renderResultsPage() {
             <div class="results-header">
                 <h2 class="results-title">Your Life Insurance Recommendation</h2>
                 <p>Hello ${personal.firstName}, based on the information you provided, we recommend:</p>
-                <div class="coverage-amount">${formatCurrency(results.recommendedCoverage)}</div>
+                <div class="coverage-amount" style="color: var(--primary);">${formatCurrency(results.recommendedCoverage)}</div>
+                <p style="margin: 20px 0; font-weight: 500;">An advisor will contact you soon to help you understand your results and explore your options.</p>
             </div>
             
             <h3 class="breakdown-title">Coverage Breakdown</h3>
@@ -568,8 +569,6 @@ function renderResultsPage() {
             
             <div class="action-buttons">
                 <button class="btn btn-secondary" id="startOverButton">Start Over</button>
-                <button class="btn btn-primary" id="emailResultsButton">Email My Results</button>
-                <button class="btn btn-primary" id="speakToAdvisorButton">Speak to an Advisor</button>
             </div>
         </div>
     `;
@@ -580,14 +579,6 @@ function renderResultsPage() {
         resultsPage.style.display = 'none';
         calculatorWizard.style.display = 'block';
         renderCurrentStep();
-    });
-    
-    document.getElementById('emailResultsButton').addEventListener('click', () => {
-        alert(`Thank you! Your results have been sent to ${calculatorState.personal.email}`);
-    });
-    
-    document.getElementById('speakToAdvisorButton').addEventListener('click', () => {
-        alert(`Thank you! An advisor will contact you at ${calculatorState.personal.phone} shortly.`);
     });
 }
 
