@@ -95,7 +95,7 @@ function create_test_submission($first_name, $last_name, $state, $zip_code) {
 }
 
 // Function to find the nearest advisor and update submission
-function assign_advisor_to_submission($submission_id, $state, $zip_code) {
+function assign_advisor_to_submission($submission_id, $zip_code) {
     global $wpdb;
     
     // Load the advisor finding function from the plugin
@@ -104,7 +104,7 @@ function assign_advisor_to_submission($submission_id, $state, $zip_code) {
     }
     
     // Find nearest advisor using the plugin's function
-    $advisor = bic_find_nearest_advisor($state, $zip_code);
+    $advisor = bic_find_nearest_advisor($zip_code);
     
     if ($advisor) {
         // Update submission with advisor id
@@ -167,7 +167,7 @@ foreach ($test_names as $name) {
     $last_name = $name[1];
     
     $submission_id = create_test_submission($first_name, $last_name, 'AK', '99502');
-    $advisor_id = assign_advisor_to_submission($submission_id, 'AK', '99502');
+    $advisor_id = assign_advisor_to_submission($submission_id, '99502');
     
     if ($advisor_id) {
         $assigned_advisors[] = $advisor_id;

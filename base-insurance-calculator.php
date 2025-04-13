@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Base Insurance Calculator
- * Plugin URI: https://basewinsurance.com/base-insurance-calculator
+ * Plugin URI: https://baseinsurance.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
- * Version: 1.0.5
- * Author: Your Name
+ * Version: 1.0.7
+ * Author: Terrence Nuss
  * Author URI: https://baseinsurance.com
  * Text Domain: base-insurance-calculator
  * Domain Path: /languages
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.0.5');
+define('BIC_VERSION', '1.0.7');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -373,7 +373,7 @@ function bic_handle_submission() {
         $submission_id = $wpdb->insert_id;
         
         // Find nearest advisor
-        $advisor = bic_find_nearest_advisor($data['location']['state'], $data['location']['zipCode']);
+        $advisor = bic_find_nearest_advisor($data['location']['zipCode']);
         
         if ($advisor) {
             // Update submission with advisor id
@@ -411,10 +411,10 @@ add_action('wp_ajax_bic_submission', 'bic_handle_submission');
 add_action('wp_ajax_nopriv_bic_submission', 'bic_handle_submission');
 
 /**
- * Find nearest advisor based on state and zip code
+ * Find nearest advisor based on zip code
  * Now supports round-robin assignment
  */
-function bic_find_nearest_advisor($state, $zip_code) {
+function bic_find_nearest_advisor($zip_code) {
     global $wpdb;
     
     $advisors_table = $wpdb->prefix . 'bic_advisors';
@@ -426,7 +426,7 @@ function bic_find_nearest_advisor($state, $zip_code) {
     
     $matching_advisors = array();
     
-    // Find advisors that cover this state and zip code
+    // Find advisors that cover this zip code
     foreach ($advisors as $advisor) {
         // Decode the territories JSON
         $territories = json_decode($advisor->territories, true);
@@ -436,13 +436,12 @@ function bic_find_nearest_advisor($state, $zip_code) {
             continue;
         }
         
-        // Check if advisor has this state in their territories
-        if (isset($territories[$state])) {
-            $territory = $territories[$state];
-            
+        // Check all states in this advisor's territories
+        foreach ($territories as $state => $territory) {
             // If territory is set to all zip codes (*) or contains this zip code
             if ($territory === '*' || (is_array($territory) && in_array($zip_code, $territory))) {
                 $matching_advisors[] = $advisor;
+                break; // Found a match, no need to check other states for this advisor
             }
         }
     }
