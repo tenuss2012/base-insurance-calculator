@@ -135,19 +135,8 @@
                     <button type="button" class="button" id="remove-logo-button" style="<?php echo !empty($logo_url) ? '' : 'display:none;'; ?>">Remove Logo</button>
                     <p class="description">
                         Upload a logo to display at the top of the calculator. Recommended size: 300px × 100px.
+                        <br>The logo will automatically be displayed if uploaded.
                     </p>
-                </td>
-            </tr>
-            
-            <tr>
-                <th scope="row">Show Logo</th>
-                <td>
-                    <fieldset>
-                        <label>
-                            <input type="checkbox" name="show_logo" value="yes" <?php checked('yes', get_option('bic_show_logo', 'no')); ?>>
-                            Display logo at the top of the calculator
-                        </label>
-                    </fieldset>
                 </td>
             </tr>
         </table>
@@ -272,7 +261,6 @@
                     primary_color: $('#bic-primary-color').val(),
                     secondary_color: $('#bic-secondary-color').val(),
                     button_text: $('input[name="button_text"]').val(),
-                    show_logo: $('input[name="show_logo"]').is(':checked') ? 'yes' : 'no',
                     logo_url: $('#bic-logo-url').val(),
                     default_advisor: $('#bic-default-advisor').val(),
                     assignment_method: $('#bic-assignment-method').val()
