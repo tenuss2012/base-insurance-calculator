@@ -3,7 +3,7 @@
  * Plugin Name: Base Insurance Calculator
  * Plugin URI: https://baseinsurance.com/base-insurance-calculator
  * Description: An insurance calculator plugin that captures lead information and notifies the closest advisor.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Terrence Nuss
  * Author URI: https://baseinsurance.com
  * Text Domain: base-insurance-calculator
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BIC_VERSION', '1.1.0');
+define('BIC_VERSION', '1.1.1');
 define('BIC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BIC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -149,7 +149,11 @@ function bic_calculator_shortcode($atts) {
                 '--secondary: #247fb0;',
                 '--white: #ffffff;',
                 '--light-gray: #f4f6f8;',
-                '--text: #333333;'
+                '--text: #333333;',
+                'body {',
+                'body,',
+                'html {',
+                'html,'
             ),
             array(
                 // Enhanced selectors
@@ -167,7 +171,11 @@ function bic_calculator_shortcode($atts) {
                 '--secondary: ' . $secondary_color . ' !important;',
                 '--white: #ffffff !important;',
                 '--light-gray: #f4f6f8 !important;',
-                '--text: #333333 !important;'
+                '--text: #333333 !important;',
+                '.bic-calculator-container {',
+                '.bic-calculator-container,',
+                '.bic-calculator-container {',
+                '.bic-calculator-container,'
             ),
             $css_content
         );
@@ -234,6 +242,17 @@ function bic_calculator_shortcode($atts) {
     .bic-calculator-container .checkbox-label input[type="checkbox"] {
         width: auto !important;
         margin-right: 8px !important;
+    }
+    .bic-calculator-container .radio-option {
+        display: inline-block !important;
+        margin-right: 20px !important;
+        margin-bottom: 10px !important;
+        cursor: pointer !important;
+    }
+    .bic-calculator-container .radio-option input[type="radio"] {
+        width: auto !important;
+        margin-right: 8px !important;
+        cursor: pointer !important;
     }
     .bic-calculator-container input,
     .bic-calculator-container select,
@@ -374,7 +393,6 @@ function bic_handle_submission() {
     if (empty($data['personal']['firstName']) || 
         empty($data['personal']['lastName']) || 
         empty($data['personal']['email']) ||
-        empty($data['personal']['phone']) || 
         empty($data['location']['zipCode'])) {
         wp_send_json_error('Required fields are missing');
         wp_die();

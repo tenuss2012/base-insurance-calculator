@@ -17,7 +17,6 @@ const calculatorState = {
         phone: '',
         age: '',
         gender: 'male',
-        smoker: false,
         healthStatus: 'average',
     },
     financial: {
@@ -132,7 +131,6 @@ const calculatorActions = {
             phone: '',
             age: '',
             gender: 'male',
-            smoker: false,
             healthStatus: 'average',
         };
         calculatorState.financial = {

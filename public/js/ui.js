@@ -195,14 +195,13 @@ function renderContactStep() {
             </div>
             
             <div class="form-group">
-                <label for="phone">Phone Number *</label>
+                <label for="phone">Phone Number</label>
                 <input 
                     type="tel" 
                     id="phone" 
                     name="phone" 
                     placeholder="(123) 456-7890"
                     value="${calculatorState.personal.phone}"
-                    required
                 >
                 <div class="error-message" id="phoneError"></div>
             </div>
@@ -255,40 +254,6 @@ function renderPersonalStep() {
             </div>
             
             <div class="form-group">
-                <label>Gender</label>
-                <div class="radio-group">
-                    <label class="radio-label">
-                        <input 
-                            type="radio" 
-                            name="gender" 
-                            value="male" 
-                            ${calculatorState.personal.gender === 'male' ? 'checked' : ''}
-                        > Male
-                    </label>
-                    <label class="radio-label">
-                        <input 
-                            type="radio" 
-                            name="gender" 
-                            value="female" 
-                            ${calculatorState.personal.gender === 'female' ? 'checked' : ''}
-                        > Female
-                    </label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="checkbox-label">
-                    <input 
-                        type="checkbox" 
-                        id="smoker" 
-                        name="smoker"
-                        ${calculatorState.personal.smoker ? 'checked' : ''}
-                    > 
-                    <span style="display: inline-block; vertical-align: middle;">I use tobacco products</span>
-                </label>
-            </div>
-            
-            <div class="form-group">
                 <label for="healthStatus">Overall Health</label>
                 <select id="healthStatus" name="healthStatus">
                     <option value="excellent" ${calculatorState.personal.healthStatus === 'excellent' ? 'selected' : ''}>Excellent</option>
@@ -297,6 +262,30 @@ function renderPersonalStep() {
                     <option value="fair" ${calculatorState.personal.healthStatus === 'fair' ? 'selected' : ''}>Fair</option>
                     <option value="poor" ${calculatorState.personal.healthStatus === 'poor' ? 'selected' : ''}>Poor</option>
                 </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Gender</label>
+                <div>
+                    <label class="radio-option">
+                        <input 
+                            type="radio" 
+                            name="gender" 
+                            value="male" 
+                            ${calculatorState.personal.gender === 'male' ? 'checked' : ''}
+                        >
+                        <span>Male</span>
+                    </label>
+                    <label class="radio-option">
+                        <input 
+                            type="radio" 
+                            name="gender" 
+                            value="female" 
+                            ${calculatorState.personal.gender === 'female' ? 'checked' : ''}
+                        >
+                        <span>Female</span>
+                    </label>
+                </div>
             </div>
         </div>
     `;
@@ -659,8 +648,6 @@ function addStepEventListeners(step) {
         
         case 4: // Personal step
             const ageInput = document.getElementById('age');
-            const genderInputs = document.querySelectorAll('input[name="gender"]');
-            const smokerInput = document.getElementById('smoker');
             const healthStatusSelect = document.getElementById('healthStatus');
             
             if (ageInput) {
@@ -669,17 +656,12 @@ function addStepEventListeners(step) {
                 });
             }
             
+            const genderInputs = document.querySelectorAll('input[name="gender"]');
             if (genderInputs) {
                 genderInputs.forEach(input => {
                     input.addEventListener('change', () => {
                         calculatorActions.setPersonal({ gender: input.value });
                     });
-                });
-            }
-            
-            if (smokerInput) {
-                smokerInput.addEventListener('change', () => {
-                    calculatorActions.setPersonal({ smoker: smokerInput.checked });
                 });
             }
             
@@ -865,7 +847,8 @@ function validateCurrentStep() {
                 emailError.textContent = '';
             }
             
-            if (!validateField(phone, 'phone')) {
+            // Phone is now optional - only validate if a value was entered
+            if (phone && !validateField(phone, 'phone')) {
                 phoneError.textContent = 'Please enter a valid phone number';
                 phoneInput.classList.add('has-error');
                 isValid = false;
